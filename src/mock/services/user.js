@@ -1,7 +1,7 @@
 import Mock from 'mockjs2'
 import { builder } from '../util'
 
-const info = options => {
+const info = (options) => {
   console.log('options', options)
   const userInfo = {
     id: '4291d7da9005377ec9aec4a71ea837f',
@@ -472,7 +472,7 @@ const info = options => {
  * @param {*} options
  * @returns
  */
-const userNav = options => {
+const userNav = (options) => {
   const nav = [
     // dashboard
     {
@@ -558,6 +558,117 @@ const userNav = options => {
         title: '高级表单'
       },
       component: 'AdvanceForm'
+    },
+
+    // Home
+    {
+      name: 'home',
+      parentId: 0,
+      id: 16,
+      meta: { title: '首页标语', icon: 'home' },
+      component: 'Home'
+    },
+
+    // blog
+    {
+      name: 'blog',
+      parentId: 0,
+      id: 11,
+      meta: {
+        icon: 'form',
+        title: '文章管理'
+      },
+      redirect: '/blog/blog-list',
+      component: 'RouteView'
+    },
+    {
+      name: 'blog-list',
+      parentId: 11,
+      id: 1101,
+      meta: {
+        title: '文章列表'
+      },
+      component: 'BlogList'
+    },
+    {
+      name: 'blog-type',
+      parentId: 11,
+      id: 1102,
+      meta: {
+        title: '文章分类'
+      },
+      component: 'BlogType'
+    },
+    {
+      name: 'add-blog',
+      parentId: 11,
+      id: 1103,
+      meta: {
+        title: '添加文章'
+      },
+      component: 'AddBlog'
+    },
+
+    // project
+    {
+      name: 'project',
+      parentId: 0,
+      id: 12,
+      meta: {
+        icon: 'bulb',
+        title: '项目管理'
+      },
+      redirect: '/project/project-list',
+      component: 'RouteView'
+    },
+    {
+      name: 'project-list',
+      parentId: 12,
+      id: 1201,
+      meta: { title: '项目列表' },
+      component: 'ProjectList'
+    },
+    {
+      name: 'add-project',
+      parentId: 12,
+      id: 1202,
+      meta: { title: '添加项目' },
+      component: 'AddProject'
+    },
+
+    // message
+    {
+      name: 'message',
+      parentId: 0,
+      id: 13,
+      meta: { title: '留言板', icon: 'check-circle' },
+      component: 'Message'
+    },
+    // comment
+    {
+      name: 'comment',
+      parentId: 0,
+      id: 14,
+      meta: { title: '评论管理', icon: 'user-add' },
+      component: 'Comment'
+    },
+
+    // About
+    {
+      name: 'about',
+      parentId: 0,
+      id: 15,
+      meta: { title: '关于我', icon: 'user' },
+      component: 'About'
+    },
+
+    // PersonalSetting
+    {
+      name: 'personal-setting',
+      parentId: 0,
+      id: 17,
+      meta: { title: '个人信息设置', icon: 'setting' },
+      component: 'PersonalSetting'
     },
 
     // list
