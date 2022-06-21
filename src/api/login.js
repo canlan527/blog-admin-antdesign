@@ -26,7 +26,7 @@ const userApi = {
  */
 export function login (parameter) {
   return request({
-    url: userApi.Login,
+    url: '/admin/login',
     method: 'post',
     data: parameter
   })
@@ -42,6 +42,12 @@ export function getSmsCaptcha (parameter) {
 
 export function getInfo () {
   return request({
+    url: '/admin/whoami',
+    method: 'get'
+  })
+}
+export function getInfoAntDesign () {
+  return request({
     url: userApi.UserInfo,
     method: 'get',
     headers: {
@@ -49,7 +55,6 @@ export function getInfo () {
     }
   })
 }
-
 export function getCurrentUserNav () {
   return request({
     url: userApi.UserMenu,
@@ -76,5 +81,14 @@ export function get2step (parameter) {
     url: userApi.twoStepCode,
     method: 'post',
     data: parameter
+  })
+}
+/**
+ * get getCaptchaCode 获取登录验证码
+ */
+export function getCaptchaCode() {
+  return request({
+    url: '/res/captcha',
+    method: 'get'
   })
 }

@@ -1,8 +1,8 @@
 import Mock from 'mockjs2'
 import { builder } from '../util'
 
-const info = (options) => {
-  console.log('options', options)
+export const info = (options) => {
+  // console.log('options', options)
   const userInfo = {
     id: '4291d7da9005377ec9aec4a71ea837f',
     name: '天野远子',
@@ -464,6 +464,8 @@ const info = (options) => {
   userInfo.role = roleObj
   return builder(userInfo)
 }
+// export const fUserInfo = info();
+// console.log(fUserInfo)
 
 /**
  * 使用 用户登录的 token 获取用户有权限的菜单
@@ -472,7 +474,7 @@ const info = (options) => {
  * @param {*} options
  * @returns
  */
-const userNav = (options) => {
+export const userNav = (options) => {
   const nav = [
     // dashboard
     {
@@ -965,7 +967,7 @@ const userNav = (options) => {
     }
   ]
   const json = builder(nav)
-  console.log('json', json)
+  // console.log('json', json)
   return json
 }
 

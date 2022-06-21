@@ -4,7 +4,7 @@ export default {
   'user.login.username.placeholder': 'Account: admin',
   'user.login.password.placeholder': 'password: admin or ant.design',
   'user.login.message-invalid-credentials':
-    'Invalid username or password（admin/ant.design）',
+    'Invalid username or password or varificationCode（admin/ant.design）',
   'user.login.message-invalid-verification-code': 'Invalid verification code',
   'user.login.tab-login-credentials': 'Credentials',
   'user.login.tab-login-mobile': 'Mobile number',
@@ -41,5 +41,6 @@ export default {
   'user.confirm-password.required': 'Please confirm your password!',
   'user.phone-number.required': 'Please enter your phone number!',
   'user.phone-number.wrong-format': 'Please enter a valid phone number',
-  'user.verification-code.required': 'Please enter the verification code!'
+  'user.verification-code.required': 'Please enter the verification code!',
+  'user.verification-captcha-code.required': 'Please enter the verification captcha code'
 }

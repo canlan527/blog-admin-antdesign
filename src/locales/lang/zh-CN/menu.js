@@ -12,7 +12,7 @@ export default {
   'menu.form.step-form.confirm': '分步表单（确认转账信息）',
   'menu.form.step-form.result': '分步表单（完成）',
   'menu.form.advanced-form': '高级表单',
-  'menu.home': '首页标语',
+  'menu.homeS': '首页标语',
   'menu.blog': '文章管理',
   'menu.blog.blog-list': '文章列表',
   'menu.blog.blog-type': '文章分类',

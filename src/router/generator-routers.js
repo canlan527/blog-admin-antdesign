@@ -2,7 +2,7 @@
 import * as loginService from '@/api/login'
 // eslint-disable-next-line
 import { BasicLayout, BlankLayout, PageView, RouteView } from '@/layouts'
-
+import { userNav } from '@/mock/services/user'
 // 前端路由表
 const constantRouterComponents = {
   // 基础页面 layout 必须引入
@@ -14,7 +14,11 @@ const constantRouterComponents = {
   404: () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
   500: () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
 
-  // 你需要动态引入的页面组件
+  // 你需要动态引入的页面组件 
+  // home
+  Home: () => import('@/views/home'),
+
+  // Workplace: () => import('@/views/home'),
   Workplace: () => import('@/views/dashboard/Workplace'),
   Analysis: () => import('@/views/dashboard/Analysis'),
 
@@ -34,9 +38,6 @@ const constantRouterComponents = {
 
   // message
   Message: () => import('@/views/message'),
-
-  // home
-  Home: () => import('@/views/home'),
 
   // comment
   Comment: () => import('@/views/comment'),
@@ -92,7 +93,7 @@ const rootRouter = {
   name: 'index',
   path: '',
   component: 'BasicLayout',
-  redirect: '/dashboard',
+  redirect: '/home',
   meta: {
     title: '首页'
   },
@@ -109,8 +110,9 @@ export const generatorDynamicRouter = (token) => {
     loginService
       .getCurrentUserNav(token)
       .then((res) => {
-        console.log('generatorDynamicRouter response:', res)
-        const { result } = res
+        // console.log('generatorDynamicRouter response:', res)
+        const { result } = userNav()
+        console.log(result)
         const menuNav = []
         const childrenNav = []
         //      后端数据, 根级树数组,  根级 PID
