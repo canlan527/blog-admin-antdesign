@@ -3,6 +3,8 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
 import Vue from 'vue'
+import { FormModel,Upload } from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
 import router from './router'
 import store from './store/'
@@ -10,6 +12,7 @@ import i18n from './locales'
 import { VueAxios } from './utils/request'
 import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
+
 
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
@@ -31,7 +34,7 @@ Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
-
+Vue.use(FormModel).use(Upload);
 new Vue({
   router,
   store,
