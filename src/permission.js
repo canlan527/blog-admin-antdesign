@@ -7,7 +7,7 @@ import notification from 'ant-design-vue/es/notification'
 import { setDocumentTitle, domTitle } from '@/utils/domUtil'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { i18nRender } from '@/locales'
-
+import { getInfo } from '@/api/login'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const allowList = ['login', 'register', 'registerResult'] // no redirect allowList
@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
   to.meta && typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`)
   /* has token */
   if (storage.get(ACCESS_TOKEN)) {
-    // console.log('进入access_token里')
+    console.log('进入access_token里')
     if (to.path === loginRoutePath) {
       // console.log('to.path是 /user/login ' + to.path)
       next({ path: defaultRoutePath })

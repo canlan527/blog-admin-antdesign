@@ -14,23 +14,23 @@
         <a-button type="primary" shape="circle" icon="edit" />
       </span>
     </a-table>
-    <a-modal v-model="visible" title="请编辑信息" ok-text="确认" cancel-text="取消" @ok="hideModal">
+    <a-modal v-model="visible" title="请编辑信息" ok-text="确认" cancel-text="取消" @ok="confirm">
       <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-form-model-item label="标题">
-          <a-input v-model="form.fieldA" placeholder="请输入标题" />
+          <a-input v-model="form.title" placeholder="请输入标题" />
         </a-form-model-item>
         <a-form-model-item label="描述">
-          <a-input v-model="form.fieldB" placeholder="请描述信息" />
+          <a-input v-model="form.description" placeholder="请描述信息" />
         </a-form-model-item>
         <a-row >
           <a-col :span="10" push="2">
             <a-form-model-item label="中图">
-              <upload :imageUrl="form.midImg"></upload>
+              <upload v-model="form.midImg"></upload>
             </a-form-model-item>
           </a-col>
           <a-col :span="10" push="2">
             <a-form-model-item label="大图">
-              <upload :imageUrl="form.bigImg"></upload>
+              <upload v-model="form.bigImg"></upload>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -41,7 +41,7 @@
 
 <script>
 import Upload from '@/components/Upload'
-import { getBannerList } from '@/api/banner'
+import { getBannerList, setBannerList } from '@/api/banner'
 import { server_url } from '@/server_url'
 // 构造表格表头
 const columns = [
@@ -109,16 +109,16 @@ export default {
   methods: {
     async fetchData() {
       this.bannerlist = await getBannerList()
-      this.bannerlist.forEach((item) => {
-        item.midImg = server_url + item.midImg
-        item.bigImg = server_url + item.bigImg
-      })
-      console.log(this.bannerlist)
+      // this.bannerlist.forEach((item) => {
+      //   item.midImg = server_url + item.midImg
+      //   item.bigImg = server_url + item.bigImg
+      // })
+      console.log(this.bannerlist);
     },
     editBanner(record, index) {
-      console.log(record, index)
+      // console.log(record, index)
       this.form = { ...record }
-      console.log(this.form)
+      // console.log(this.form)
       this.showModal()
     },
     showModal() {
@@ -127,20 +127,25 @@ export default {
     hideModal() {
       this.visible = false
     },
-    confirm() {
-      this.$confirm({
-        title: 'Confirm',
-        content: 'Bla bla ...',
-        okText: '确认',
-        cancelText: '取消',
-      })
+    async confirm() {
+      const tempList = [...this.bannerlist];
+      for(let i = 0; i < tempList.length; i++) {
+        if(tempList[i].id === this.form.id) {
+          tempList[i] = this.form;
+        }
+      }
+      await setBannerList(tempList)
+      this.visible = false;
+      await this.fetchData();
+      this.$message.success('修改成功');
     },
+
   },
 }
 </script>
 
 <style lang="less" scoped>
-/deep/ .upload-container {
+.upload-container {
     margin-left: 10px;
   }
 .home-container {

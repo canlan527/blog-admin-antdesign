@@ -62,9 +62,41 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo()
           .then((res) => {
+            console.log(res)
             if (typeof res.id === 'string') {
               // 如果获取到用户id，代表用户登录成功
               commit('SET_USER', res)
+
+              getInfoAntDesign().then((response) => {
+                const result = info().result
+                // console.log(result)
+                if (result.role && result.role.permissions.length > 0) {
+                  const role = result.role
+                  role.permissions = result.role.permissions
+                  role.permissions.map((per) => {
+                    if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
+                      const action = per.actionEntitySet.map((action) => {
+                        return action.action
+                      })
+                      per.actionList = action
+                    }
+                  })
+                  role.permissionList = role.permissions.map((permission) => {
+                    return permission.permissionId
+                  })
+                  commit('SET_ROLES', result.role)
+                  commit('SET_INFO', result)
+                } else {
+                  reject(new Error('getInfo: roles must be a non-null array !'))
+                }
+    
+                commit('SET_NAME', { name: result.name, welcome: welcome() })
+                commit('SET_AVATAR', result.avatar)
+    
+                resolve(response)
+              }).catch((error) => {
+                reject(error)
+              })
             } else {
               reject(new Error('getInfo: current user is not exits!!!'))
             }
@@ -73,38 +105,7 @@ const user = {
           .catch((error) => {
             reject(error)
           })
-        getInfoAntDesign()
-          .then((response) => {
-            const result = info().result
-            // console.log(result)
-            if (result.role && result.role.permissions.length > 0) {
-              const role = result.role
-              role.permissions = result.role.permissions
-              role.permissions.map((per) => {
-                if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-                  const action = per.actionEntitySet.map((action) => {
-                    return action.action
-                  })
-                  per.actionList = action
-                }
-              })
-              role.permissionList = role.permissions.map((permission) => {
-                return permission.permissionId
-              })
-              commit('SET_ROLES', result.role)
-              commit('SET_INFO', result)
-            } else {
-              reject(new Error('getInfo: roles must be a non-null array !'))
-            }
 
-            commit('SET_NAME', { name: result.name, welcome: welcome() })
-            commit('SET_AVATAR', result.avatar)
-
-            resolve(response)
-          })
-          .catch((error) => {
-            reject(error)
-          })
       })
     },
 

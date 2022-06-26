@@ -6,7 +6,8 @@
         list-type="picture-card"
         :file-list="fileList"
         class="avatar-uploader"
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        action="/api/upload"
+        :headers="headers"
         @preview="handlePreview"
         @change="handleChange"
       >
@@ -21,27 +22,46 @@
   </div>
 </template>
 <script>
-// import { server_url } from '@/server_url'
+import storage from 'store'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { server_url } from '@/server_url'
 function getBase64(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
+  })
 }
 export default {
-  props:['imageUrl'],
+  props: ['value'],
   data() {
     return {
       previewVisible: false,
       loading: false,
       previewImage: '',
-      fileList: []
+      fileList: [],
+      temp: {},
+      _imgUrl: '',
     }
   },
-  mounted () {
-    this.generateFileList() 
+  created() {
+    this.generateFileList(this.value)
+  },
+  watch: {
+    value(val) {
+      if (val) {
+        this.fileList = []
+        this.generateFileList(val)
+      }
+    },
+  },
+  computed: {
+    headers() {
+      return {
+        Authorization: 'Bearer ' + storage.get(ACCESS_TOKEN),
+      }
+    },
   },
   methods: {
     handleCancel() {
@@ -54,26 +74,32 @@ export default {
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    handleChange({ fileList }) {
-      this.fileList = fileList;
+    handleChange({ file, fileList, event }) {
+      this.fileList = fileList
+      console.log(file)
+      if (file.response && file.response.code === 0) {
+        this.handleSuccess(file.response)
+      }
     },
-    generateFileList() {
-      const temp = {}
-      temp.uid = Math.random() * 100000;
-      temp.name="image.png";
-      temp.status="done";
-      temp.url = this.imageUrl;
-      this.fileList.push(temp)
-    }
+    generateFileList(url) {
+      this.temp.uid = Math.random() * 100000
+      this.temp.name = 'image.png'
+      this.temp.status = 'done'
+      this.temp.url = url
+      this.fileList.push(this.temp)
+    },
+    handleSuccess(res) {
+      this._imgUrl = server_url + res.data
+      this.$emit('input',  this._imgUrl)
+    },
   },
 }
 </script>
-<style>
+<style lang="less" scoped>
 /* you can make up upload button and sample style by using stylesheets */
 .upload-container {
   width: 126px;
-  height:126px;
-
+  height: 126px;
 }
 .ant-upload-select-picture-card i {
   font-size: 32px;
@@ -88,12 +114,12 @@ export default {
   width: 128px;
   height: 128px;
 }
-.avatar-uploader > .ant-upload img{
+.avatar-uploader > .ant-upload img {
   width: 128px;
   height: 128px;
 }
 .ant-upload-list-picture-card .ant-upload-list-item {
-    width: 128px;
+  width: 128px;
   height: 128px;
 }
 .ant-upload-select-picture-card i {
