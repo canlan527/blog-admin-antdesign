@@ -118,7 +118,7 @@ export default {
       // })
       const form = this.form
       if(!form.title || !form.description || !form.midImg || !form.bigImg) {
-        this.visible = false;
+        this.$message.error('请正确填写表单项')
         return false;
       }
 
