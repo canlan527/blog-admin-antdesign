@@ -1,6 +1,9 @@
 <template>
   <div class="home-container">
-    <a-table :columns="columns" :data-source="bannerlist" bordered rowKey="id">
+    <!-- <a-row>
+      <a-button @click="handleAdd" type="primary" style="marginBottom: 20px" >新增一行</a-button>
+    </a-row> -->
+    <a-table ref="table" :columns="columns" :data-source="bannerlist" bordered rowKey="id">
       <span slot="indexRender" slot-scope="text, record, index">{{ index + 1 }}</span>
       <span slot="imgRender" slot-scope="record" class="img-span">
         <img :src="record" alt="" />
@@ -9,40 +12,20 @@
         slot="btnRender"
         slot-scope="text, record, index"
         class="btn-action"
-        @click="() => editBanner(record, index)"
+        @click="() => handleEdit(record, index)"
       >
         <a-button type="primary" shape="circle" icon="edit" />
       </span>
     </a-table>
-    <a-modal v-model="visible" title="请编辑信息" ok-text="确认" cancel-text="取消" @ok="confirm">
-      <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-model-item label="标题">
-          <a-input v-model="form.title" placeholder="请输入标题" />
-        </a-form-model-item>
-        <a-form-model-item label="描述">
-          <a-input v-model="form.description" placeholder="请描述信息" />
-        </a-form-model-item>
-        <a-row >
-          <a-col :span="10" push="2">
-            <a-form-model-item label="中图">
-              <upload v-model="form.midImg"></upload>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="10" push="2">
-            <a-form-model-item label="大图">
-              <upload v-model="form.bigImg"></upload>
-            </a-form-model-item>
-          </a-col>
-        </a-row>
-      </a-form-model>
-    </a-modal>
+    <x-modal ref="modal" :visible="visible" :form="form" @ok="handleOk" @cancel="handleCancel"></x-modal>
   </div>
 </template>
 
 <script>
 import Upload from '@/components/Upload'
 import { getBannerList, setBannerList } from '@/api/banner'
-import { server_url } from '@/server_url'
+import XModal from './modal'
+// import { server_url } from '@/server_url'
 // 构造表格表头
 const columns = [
   {
@@ -83,25 +66,20 @@ export default {
       columns,
       bannerlist: [],
       visible: false,
-      labelCol: { span: 4 },
-      wrapperCol: { span: 16 },
       form: {
-        id: '',
       },
-      previewVisible: false,
-      fileList: [],
-      previewImage: '',
     }
   },
   computed: {
     marginStyle() {
       return {
-        marginRight: '12px'
+        marginRight: '12px',
       }
-    }
+    },
   },
   components: {
     Upload,
+    XModal,
   },
   async created() {
     await this.fetchData()
@@ -113,9 +91,19 @@ export default {
       //   item.midImg = server_url + item.midImg
       //   item.bigImg = server_url + item.bigImg
       // })
-      console.log(this.bannerlist);
+      console.log(this.bannerlist)
     },
-    editBanner(record, index) {
+    handleAdd() {
+      this.form = {}
+      this.visible = true
+      // this.bannerlist // 数据
+      // bigImg: "http://localhost:7001/static/upload/2022-6-26-18-38-10-802-a13e6.jpg"
+      // description: "白日的时光寂静缓慢，我们注视前方，努力不使其偏向"
+      // id: "62b84025d57acf485151f633"
+      // midImg: "http://localhost:7001/static/upload/2022-6-26-18-34-44-680-c2178.jpg"
+      // title: "琥珀"
+    },
+    handleEdit(record, index) {
       // console.log(record, index)
       this.form = { ...record }
       // console.log(this.form)
@@ -127,29 +115,30 @@ export default {
     hideModal() {
       this.visible = false
     },
-    async confirm() {
-      const tempList = [...this.bannerlist];
-      for(let i = 0; i < tempList.length; i++) {
-        if(tempList[i].id === this.form.id) {
-          tempList[i] = this.form;
+    async handleOk() {
+      const tempList = [...this.bannerlist]
+      for (let i = 0; i < tempList.length; i++) {
+        if (tempList[i].id === this.form.id) {
+          tempList[i] = this.form
         }
       }
       await setBannerList(tempList)
-      this.visible = false;
-      await this.fetchData();
-      this.$message.success('修改成功');
+      this.visible = false
+      await this.fetchData()
+      this.$message.success('修改成功')
     },
-
+    handleCancel() {
+      this.visible = false
+    }
   },
 }
 </script>
 
 <style lang="less" scoped>
 .upload-container {
-    margin-left: 10px;
-  }
+  margin-left: 10px;
+}
 .home-container {
-  
   .img-span {
     display: inline-block;
     width: 100px;
@@ -160,6 +149,5 @@ export default {
   .btn-action {
     display: inline-block;
   }
-  
 }
 </style>

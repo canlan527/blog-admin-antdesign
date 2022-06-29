@@ -46,7 +46,9 @@ export default {
     }
   },
   created() {
-    this.generateFileList(this.value)
+    if(this.value) {
+      this.generateFileList(this.value)
+    }
   },
   watch: {
     value(val) {
