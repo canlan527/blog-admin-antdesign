@@ -46,9 +46,13 @@ export default {
     }
   },
   created() {
-    if(this.value) {
+    this.fileList = []
+    if (this.value) {
       this.generateFileList(this.value)
     }
+  },
+  destroyed() {
+    this.fileList = []
   },
   watch: {
     value(val) {
@@ -92,7 +96,7 @@ export default {
     },
     handleSuccess(res) {
       this._imgUrl = server_url + res.data
-      this.$emit('input',  this._imgUrl)
+      this.$emit('input', this._imgUrl)
     },
   },
 }

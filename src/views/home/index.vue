@@ -1,20 +1,16 @@
 <template>
   <div class="home-container">
-    <!-- <a-row>
-      <a-button @click="handleAdd" type="primary" style="marginBottom: 20px" >新增一行</a-button>
-    </a-row> -->
+    <a-row>
+      <a-button @click="handleAdd" type="primary" class="btn-add">新增一行</a-button>
+    </a-row>
     <a-table ref="table" :columns="columns" :data-source="bannerlist" bordered rowKey="id">
       <span slot="indexRender" slot-scope="text, record, index">{{ index + 1 }}</span>
       <span slot="imgRender" slot-scope="record" class="img-span">
         <img :src="record" alt="" />
       </span>
-      <span
-        slot="btnRender"
-        slot-scope="text, record, index"
-        class="btn-action"
-        @click="() => handleEdit(record, index)"
-      >
-        <a-button type="primary" shape="circle" icon="edit" />
+      <span slot="btnRender" slot-scope="text, record, index" class="btn-action">
+        <a-button type="primary" shape="circle" icon="edit" @click="() => handleEdit(record, index)" />
+        <a-button type="primary" shape="circle" icon="delete" @click="() => handleDel(record, index)" />
       </span>
     </a-table>
     <x-modal ref="modal" :visible="visible" :form="form" @ok="handleOk" @cancel="handleCancel"></x-modal>
@@ -66,8 +62,7 @@ export default {
       columns,
       bannerlist: [],
       visible: false,
-      form: {
-      },
+      form: {},
     }
   },
   computed: {
@@ -96,17 +91,13 @@ export default {
     handleAdd() {
       this.form = {}
       this.visible = true
-      // this.bannerlist // 数据
-      // bigImg: "http://localhost:7001/static/upload/2022-6-26-18-38-10-802-a13e6.jpg"
-      // description: "白日的时光寂静缓慢，我们注视前方，努力不使其偏向"
-      // id: "62b84025d57acf485151f633"
-      // midImg: "http://localhost:7001/static/upload/2022-6-26-18-34-44-680-c2178.jpg"
-      // title: "琥珀"
+      if (this.$refs.modal) {
+        this.$refs.modal.title = '请添加信息'
+      }
     },
     handleEdit(record, index) {
-      // console.log(record, index)
       this.form = { ...record }
-      // console.log(this.form)
+      this.$refs.modal.title = '请编辑信息'
       this.showModal()
     },
     showModal() {
@@ -115,21 +106,64 @@ export default {
     hideModal() {
       this.visible = false
     },
-    async handleOk() {
-      const tempList = [...this.bannerlist]
-      for (let i = 0; i < tempList.length; i++) {
-        if (tempList[i].id === this.form.id) {
-          tempList[i] = this.form
-        }
+    async handleOk(ruleForm) {
+      // console.log(this.form);
+      // this.$refs.modal.$refs.ruleForm.validate((valid) => {
+      //   console.log('validate')
+      //   if (valid) {
+      //     alert('submit')
+      //   } else {
+      //     console.log('error submit')
+      //   }
+      // })
+      const form = this.form
+      if(!form.title || !form.description || !form.midImg || !form.bigImg) {
+        this.visible = false;
+        return false;
       }
+
+      const tempList = [...this.bannerlist]
+      let tipText = '添加成功'
+      if (this.form.id) {
+        // 编辑 可以获取到id
+        for (let i = 0; i < tempList.length; i++) {
+          if (tempList[i].id === this.form.id) {
+            tempList[i] = this.form
+          }
+        }
+        tipText = '修改成功'
+      } else {
+        tempList.push(this.form)
+      }
+
       await setBannerList(tempList)
       this.visible = false
       await this.fetchData()
-      this.$message.success('修改成功')
+      this.$message.success(tipText)
+    },
+    handleDel(record, index) {
+      const that = this
+      this.$confirm({
+        title: '你确定要删除本条信息吗',
+        content: '删除之后，数据不可恢复，确定删除吗',
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        async onOk() {
+          const tempList = that.bannerlist.filter((item, index) => {
+            return item.id !== record.id
+          })
+          await setBannerList(tempList)
+          that.visible = false
+          await that.fetchData()
+          that.$message.success('删除成功')
+        },
+        onCancel() {},
+      })
     },
     handleCancel() {
       this.visible = false
-    }
+    },
   },
 }
 </script>
@@ -137,6 +171,9 @@ export default {
 <style lang="less" scoped>
 .upload-container {
   margin-left: 10px;
+}
+.btn-add {
+  margin-bottom: 20px;
 }
 .home-container {
   .img-span {
@@ -147,7 +184,9 @@ export default {
     }
   }
   .btn-action {
-    display: inline-block;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
   }
 }
 </style>
