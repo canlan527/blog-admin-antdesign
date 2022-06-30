@@ -13,7 +13,7 @@
         <a-button type="primary" shape="circle" icon="delete" @click="() => handleDel(record, index)" />
       </span>
     </a-table>
-    <x-modal ref="modal" :visible="visible" :form="form" @ok="handleOk" @cancel="handleCancel"></x-modal>
+    <x-modal ref="modal" :visible="visible" :form="form" @submit="handleOk" @cancel="handleCancel"></x-modal>
   </div>
 </template>
 
@@ -106,22 +106,7 @@ export default {
     hideModal() {
       this.visible = false
     },
-    async handleOk(ruleForm) {
-      // console.log(this.form);
-      // this.$refs.modal.$refs.ruleForm.validate((valid) => {
-      //   console.log('validate')
-      //   if (valid) {
-      //     alert('submit')
-      //   } else {
-      //     console.log('error submit')
-      //   }
-      // })
-      const form = this.form
-      if(!form.title || !form.description || !form.midImg || !form.bigImg) {
-        this.$message.error('请正确填写表单项')
-        return false;
-      }
-
+    async handleOk() {
       const tempList = [...this.bannerlist]
       let tipText = '添加成功'
       if (this.form.id) {
