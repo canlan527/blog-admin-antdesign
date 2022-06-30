@@ -10,7 +10,7 @@
       </span>
       <span slot="btnRender" slot-scope="text, record, index" class="btn-action">
         <a-button type="primary" shape="circle" icon="edit" @click="() => handleEdit(record, index)" />
-        <a-button type="primary" shape="circle" icon="delete" @click="() => handleDel(record, index)" />
+        <a-button type="danger" shape="circle" icon="delete" @click="() => handleDel(record, index)" />
       </span>
     </a-table>
     <x-modal ref="modal" :visible="visible" :form="form" @submit="handleOk" @cancel="handleCancel"></x-modal>
