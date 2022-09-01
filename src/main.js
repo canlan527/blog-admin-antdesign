@@ -3,7 +3,7 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
 import Vue from 'vue'
-import { FormModel,Upload } from 'ant-design-vue';
+import { FormModel,Upload,Popover } from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
 import router from './router'
@@ -34,7 +34,8 @@ Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
-Vue.use(FormModel).use(Upload);
+Vue.use(FormModel).use(Upload).use(Popover);
+console.log(Popover)
 new Vue({
   router,
   store,

@@ -1,0 +1,12 @@
+import request from '@/utils/request'
+
+export function getBlogList(page = 1, limit = 10) {
+  return request({
+    url: '/blog',
+    method: 'get',
+    params: {
+      page,
+      limit
+    }
+  })
+}
