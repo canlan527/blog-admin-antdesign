@@ -21,8 +21,8 @@
       <span slot="cateRender" slot-scope="text, record">{{ text.name }}</span>
       <span slot="dateRender" slot-scope="text, record">{{ formatDate(text) }}</span>
       <span slot="btnRender" slot-scope="text, record, index" class="btn-action" >
-        <a-button class="cell-btn" type="primary" shap="circle" icon="edit" ></a-button>
-        <a-button type="danger" shap="circle" icon="delete" @click="() => handleDel(record)"></a-button>
+        <a-button class="cell-btn" type="primary" shape="circle" icon="edit" ></a-button>
+        <a-button type="danger" shape="circle" icon="delete" @click="() => handleDel(record)"></a-button>
       </span>
     </a-table>
   </div>
