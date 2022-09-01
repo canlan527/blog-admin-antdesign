@@ -2,20 +2,39 @@
   <div class="blogtype-container">
     <div class="search-box">
       <a-input-group compact>
-        <a-select ref="selectRef" :default-value="defaultSelect" @change="handleChange">
+        <a-select ref="selectRef" :default-value="defaultValue" placeholder="分类等级" @change="handleChange">
           <a-select-option v-for="item of levelList" :key="item"> {{ item }} </a-select-option>
         </a-select>
         <a-input style="width: 30%" placeholder="请输入要添加分类名称" v-model="inputValue" />
         <a-button type="primary" @click="handleAddType">添 加</a-button>
       </a-input-group>
     </div>
-    <a-table :data-source="data" :columns="columns" bordered>
+    <a-table :data-source="data" :columns="columns" bordered rowKey="id">
       <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
       <div slot="action" slot-scope="text, record, index" class="btn-action">
-        <a-button class="btn" type="primary" shape="circle" icon="edit"></a-button>
+        <a-button class="btn" type="primary" shape="circle" icon="edit" @click="() => handleEdit(record)"></a-button>
         <a-button type="danger" shape="circle" icon="delete" @click="() => handleDel(record)"></a-button>
       </div>
     </a-table>
+
+    <a-modal
+      title="编辑文章分类"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item label="分类名称">
+          <a-input v-model="form.name" />
+        </a-form-model-item>
+        <a-form-model-item label="排序等级">
+          <a-select v-model="form.order">
+            <a-select-option v-for="item of levelList" :key="item"> {{ item }} </a-select-option>
+          </a-select>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
   </div>
 </template>
 
@@ -63,8 +82,16 @@ export default {
       options,
       level: 1,
       levelList,
-      defaultSelect: '分类等级',
       dataSource: [],
+      defaultValue: 1,
+      form: {
+        name: '',
+        order: 1,
+      },
+      labelCol: { span: 4 },
+      wrapperCol: { span: 14 },
+      visible: false,
+      confirmLoading: false,
     }
   },
   created() {
@@ -87,7 +114,7 @@ export default {
           this.$message.loading('Action in progress..', 0.2).then(() => this.$message.success('添加成功', 0.5))
           this.getBlogType()
           this.inputValue = ''
-          this.$refs.selectRef.$el.innerText = this.defaultSelect
+          // this.$refs.selectRef.$el.innerText = this.defaultValue;
         })
       } else {
         this.$message.warn('请输入要添加分类名称', 0.5)
@@ -97,7 +124,7 @@ export default {
       this.level = value
     },
     handleDel(record) {
-      const that = this;
+      const that = this
       this.$confirm({
         title: '确定要删除此条记录吗',
         onOk() {
@@ -108,6 +135,26 @@ export default {
         },
         onCancel() {},
       })
+    },
+    handleOk() {
+      this.confirmLoading = true;
+      updateBlogType(this.form).then(res => {
+        console.log(this.form);
+        this.$message.success('更新成功', 0.5)
+        this.getBlogType()
+        this.confirmLoading = false;
+        this.visible = false;
+      })
+    },
+    handleEdit(record) {
+      this.visible = true;
+      findOneBlogType(record.id).then(res => {
+        // console.log(res);
+        this.form = res
+      })
+    },
+    handleCancel() {
+      this.visible = false
     },
   },
 }

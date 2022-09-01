@@ -21,7 +21,10 @@ export function updateBlogType(blog) {
   return request({
     url: `/blogtype/${blog.id}`,
     method: 'put',
-    data:blog.data,
+    data:{
+      name: blog.name,
+      order: blog.order
+    },
   })
 }
 

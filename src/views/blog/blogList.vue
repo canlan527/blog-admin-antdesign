@@ -18,13 +18,23 @@
           <h1>{{ text }}</h1>
         </a-popover>
       </template>
-      <span slot="cateRender" slot-scope="text, record">{{ text.name }}</span>
+      <span slot="cateRender" slot-scope="text, record">{{ text !== null ? text.name : '未分类' }}</span>
       <span slot="dateRender" slot-scope="text, record">{{ formatDate(text) }}</span>
       <span slot="btnRender" slot-scope="text, record, index" class="btn-action" >
-        <a-button class="cell-btn" type="primary" shape="circle" icon="edit" ></a-button>
+        <a-button class="cell-btn" type="primary" shape="circle" icon="edit" @click="() => this.visible = true"></a-button>
         <a-button type="danger" shape="circle" icon="delete" @click="() => handleDel(record)"></a-button>
       </span>
     </a-table>
+
+    <!-- <a-modal
+      title="Title"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+    <a-input></a-input>
+    </a-modal> -->
   </div>
 </template>
 
@@ -87,6 +97,8 @@ export default {
         defaultPageSize: 10,
         total: 1,
       },
+      visible: false,
+      confirmLoading:false,
     }
   },
   created() {
@@ -99,9 +111,6 @@ export default {
         objectFit: 'cover',
       }
     },
-  },
-  components: {
-    Upload,
   },
   methods: {
     formatDate,
@@ -126,6 +135,12 @@ export default {
       deleteOneBlog(record.id).then(res => {
         this.getBlogList()
       })
+    },
+    handleOk() {
+      this.confirmLoading = true;
+    },
+    handleCancel() {
+      this.visible = false;
     }
   },
 }
