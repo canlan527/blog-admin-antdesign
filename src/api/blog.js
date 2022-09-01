@@ -10,3 +10,10 @@ export function getBlogList(page = 1, limit = 10) {
     }
   })
 }
+
+export function deleteOneBlog(id) {
+  return request({
+    url:`blog/${id}`,
+    method: 'delete'
+  })
+}
