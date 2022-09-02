@@ -13,6 +13,8 @@
   "dependencies": {
     "@ant-design-vue/pro-layout": "^1.0.11",
     "@antv/data-set": "^0.10.2",
+    "@wangeditor/editor": "^5.1.15",
+    "@wangeditor/editor-for-vue": "^1.0.2",
     "ant-design-vue": "^1.7.8",
     "axios": "^0.26.1",
     "core-js": "^3.21.1",

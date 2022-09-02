@@ -139,7 +139,7 @@ export default {
     handleOk() {
       this.confirmLoading = true;
       updateBlogType(this.form).then(res => {
-        console.log(this.form);
+        // console.log(this.form);
         this.$message.success('更新成功', 0.5)
         this.getBlogType()
         this.confirmLoading = false;
