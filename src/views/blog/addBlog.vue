@@ -47,6 +47,7 @@ export default {
   created() {
     getBlogType().then((res) => {
       this.blogType = res
+      this.form.categoryId = res[0].id
     })
   },
   methods: {
