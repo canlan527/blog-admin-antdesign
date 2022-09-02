@@ -57,8 +57,9 @@ export default {
   watch: {
     value(val) {
       if (val) {
+        const fullpath = server_url + val
         this.fileList = []
-        this.generateFileList(val)
+        this.generateFileList(fullpath)
       }
     },
   },
@@ -67,6 +68,9 @@ export default {
       return {
         Authorization: 'Bearer ' + storage.get(ACCESS_TOKEN),
       }
+    },
+    fullPath() {
+      return server_url + this.value
     },
   },
   methods: {
@@ -82,9 +86,9 @@ export default {
     },
     handleChange({ file, fileList, event }) {
       this.fileList = fileList
-      console.log(file)
       if (file.response && file.response.code === 0) {
         this.handleSuccess(file.response)
+        console.log(this.previewImage)
       }
     },
     generateFileList(url) {
@@ -95,8 +99,7 @@ export default {
       this.fileList.push(this.temp)
     },
     handleSuccess(res) {
-      this._imgUrl = server_url + res.data
-      this.$emit('input', this._imgUrl)
+      this.$emit('input', res.data)
     },
   },
 }

@@ -21,7 +21,7 @@
 import Upload from '@/components/Upload'
 import { getBannerList, setBannerList } from '@/api/banner'
 import XModal from './modal'
-// import { server_url } from '@/server_url'
+import { server_url } from '@/server_url'
 // 构造表格表头
 const columns = [
   {
@@ -82,10 +82,10 @@ export default {
   methods: {
     async fetchData() {
       this.bannerlist = await getBannerList()
-      // this.bannerlist.forEach((item) => {
-      //   item.midImg = server_url + item.midImg
-      //   item.bigImg = server_url + item.bigImg
-      // })
+      this.bannerlist.forEach((item) => {
+        item.midImg = server_url + item.midImg
+        item.bigImg = server_url + item.bigImg
+      })
       console.log(this.bannerlist)
     },
     handleAdd() {

@@ -7,7 +7,7 @@
     <h3 class="mt">文章描述</h3>
     <a-textarea v-model="form.description" placeholder="请添加文章描述" :auto-size="{ minRows: 3, maxRows: 5 }" />
     <h3 class="mt">文章头图</h3>
-    <Upload></Upload>
+    <Upload v-model="form.thumb"></Upload>
     <h3 class="mt">文章分类</h3>
     <a-select placeholder="分类等级" v-if="blogType[0]" :default-value="blogType[0].name" @change="handleChange"  style="width: 200px">
       <a-select-option v-for="item of blogType" :key="item.id" > {{ item.name }} </a-select-option>
@@ -49,7 +49,7 @@ export default {
       this.form.createDate = new Date().getTime();
       this.form.htmlContent = this.$refs.toastuiEditor.invoke('getHTML');
       this.form.markdownContent =  this.$refs.toastuiEditor.invoke('getMarkdown');
-      console.log(this.form.markdownContent);
+      console.log(this.form.thumb);
     },
     
   },
