@@ -88,7 +88,6 @@ export default {
       this.fileList = fileList
       if (file.response && file.response.code === 0) {
         this.handleSuccess(file.response)
-        console.log(this.previewImage)
       }
     },
     generateFileList(url) {
