@@ -17,3 +17,13 @@ export function deleteOneBlog(id) {
     method: 'delete'
   })
 }
+
+export function addBlog(data) {
+  return request({
+    url:'blog',
+    method: 'post',
+    params: {
+      data
+    }
+  })
+}
