@@ -610,7 +610,16 @@ export const userNav = (options) => {
       },
       component: 'AddBlog'
     },
-
+    {
+      name: 'edit-blog',
+      parentId: 11,
+      id: 1104,
+      meta: {
+        title: '编辑文章',
+        show: false,
+      },
+      component: 'EditBlog'
+    },
     // project
     {
       name: 'project',

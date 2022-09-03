@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
   to.meta && typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`)
   /* has token */
   if (storage.get(ACCESS_TOKEN)) {
-    console.log('进入access_token里')
+    //console.log('进入access_token里')
     if (to.path === loginRoutePath) {
       // console.log('to.path是 /user/login ' + to.path)
       next({ path: defaultRoutePath })
@@ -32,7 +32,6 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch('GetInfo')
           .then((res) => {
-            // console.log(res)
             const roles = res.result && res.result.role
             // generate dynamic router
             store.dispatch('GenerateRoutes', { roles }).then(() => {

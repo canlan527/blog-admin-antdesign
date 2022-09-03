@@ -18,10 +18,10 @@
           <h1>{{ text }}</h1>
         </a-popover>
       </template>
-      <span slot="cateRender" slot-scope="text, record">{{ text !== null ? text.name : '未分类' }}</span>
-      <span slot="dateRender" slot-scope="text, record">{{ formatDate(text) }}</span>
-      <span slot="btnRender" slot-scope="text, record, index" class="btn-action" >
-        <a-button class="cell-btn" type="primary" shape="circle" icon="edit" @click="() => this.visible = true"></a-button>
+      <span slot="cateRender" slot-scope="text">{{ text !== null ? text.name : '未分类' }}</span>
+      <span slot="dateRender" slot-scope="text">{{ formatDate(text) }}</span>
+      <span slot="btnRender" slot-scope="text, record" class="btn-action" >
+        <a-button class="cell-btn" type="primary" shape="circle" icon="edit" @click="() => handleEdit(record)"></a-button>
         <a-button type="danger" shape="circle" icon="delete" @click="() => handleDel(record)"></a-button>
       </span>
     </a-table>
@@ -141,6 +141,12 @@ export default {
     },
     handleCancel() {
       this.visible = false;
+    },
+    handleEdit(record) {
+      this.$router.push({
+        name: 'edit-blog',
+        params: {id: record.id},
+      })
     }
   },
 }

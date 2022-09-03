@@ -31,6 +31,7 @@ const constantRouterComponents = {
   AddBlog: () => import('@/views/blog/addBlog'),
   BlogList: () => import('@/views/blog/blogList'),
   BlogType: () => import('@/views/blog/blogType'),
+  EditBlog: () => import('@/views/blog/editBlog'),
 
   // project
   ProjectList: () => import('@/views/project/list'),
@@ -115,7 +116,7 @@ export const generatorDynamicRouter = (token) => {
         console.log(result)
         const menuNav = []
         const childrenNav = []
-        //      后端数据, 根级树数组,  根级 PID
+        // 后端数据, 根级树数组,  根级 PID
         listToTree(result, childrenNav, 0)
         rootRouter.children = childrenNav
         menuNav.push(rootRouter)

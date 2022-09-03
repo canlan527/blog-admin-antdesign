@@ -25,3 +25,18 @@ export function addBlog(data) {
     data,
   })
 }
+
+export function updateBlog(info) {
+  return request({
+    url: `blog/${info.id}`,
+    method: 'put',
+    data: info.data,
+  })
+}
+
+export function findOneBlog(id) {
+  return request({
+    url: `blog/${id}`,
+    method: 'get',
+  })
+}

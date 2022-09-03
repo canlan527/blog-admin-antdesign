@@ -201,6 +201,35 @@ export const asyncRouterMap = [
         ]
       },
 
+      // blog
+      {
+        path: '/blog',
+        component: RouteView,
+        redirect: '/blog/bloglist',
+        name: '博客',
+        meta: { title: 'menu.blog', icon: 'user', keepAlive:  true, permission: ['user'] },
+        children: [
+          {
+            path: 'blog/bloglist',
+            name: 'bloglist',
+            component: () => import('@/views/blog/blogList'),
+            meta: { title: 'menu.blog.bloglist', keepAlive: true, permission: ['user']}
+            },
+          {
+            path: 'blog/addblog',
+            name: 'addblog',
+            component: () => import('@/views/blog/addBlog'),
+            meta: { title: 'menu.blog.addblog', keepAlive: true, permission: ['user']}
+          },
+          {
+            path: 'blog/editblog',
+            name: 'editblog',
+            component: () => import('@/views/blog/editBlog'),
+            meta: { title: 'menu.blog.editblog', keepAlive: true, permission: ['user']}
+          },
+        ]
+      },
+
       // account
       {
         path: '/account',
