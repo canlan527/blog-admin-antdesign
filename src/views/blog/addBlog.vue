@@ -3,11 +3,11 @@
     <h3>文章标题</h3>
     <a-input placeholder="请输入文章标题" v-model="form.title"></a-input>
     <h3 class="mt">文章编辑</h3>
-    <editor ref="toastuiEditor" height="800px" />
+    <editor :initialValue="viewerText" ref="toastuiEditor" height="800px" :options="editorOptions" />
     <h3 class="mt">文章描述</h3>
     <a-textarea v-model="form.description" placeholder="请添加文章描述" :auto-size="{ minRows: 3, maxRows: 5 }" />
     <h3 class="mt">文章头图</h3>
-    <Upload v-model="form.thumb"></Upload>
+    <Upload v-model="form.thumb" ></Upload>
     <h3 class="mt">文章分类</h3>
     <a-select
       placeholder="分类等级"
@@ -25,12 +25,16 @@
 </template>
 
 <script>
-import { getBlogType } from '@/api/blogType'
-import { addBlog } from '@/api/blog'
-import Upload from '@/components/Upload'
-// import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
-import '@toast-ui/editor/dist/toastui-editor.css'
-import { Editor } from '@toast-ui/vue-editor'
+
+import { getBlogType } from '@/api/blogType';
+import { addBlog } from '@/api/blog';
+import Upload from '@/components/Upload';
+import 'prismjs/themes/prism.css';
+import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
+import { Editor } from '@toast-ui/vue-editor';
+import '@toast-ui/editor/dist/i18n/zh-cn';
+import '@toast-ui/editor/dist/toastui-editor.css';
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight-all.js';
 
 export default {
   components: { Editor, Upload },
@@ -39,9 +43,14 @@ export default {
       form: {
         toc: [],
       },
+      viewerText: '',
       editor: Editor,
       blogType: [],
       imgUrl: '', // 图片在服务器上的地址
+      editorOptions: {
+        language: 'zh-CN',
+        plugins: [codeSyntaxHighlight]
+      },
     }
   },
   created() {
