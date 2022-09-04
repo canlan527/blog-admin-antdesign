@@ -10,6 +10,7 @@
         :headers="headers"
         @preview="handlePreview"
         @change="handleChange"
+        ref="uploadRef"
       >
         <div v-if="fileList.length < 1">
           <a-icon type="plus" />
@@ -34,7 +35,7 @@ function getBase64(file) {
   })
 }
 export default {
-  props: ['value'],
+  props: ['value','parentComp'],
   data() {
     return {
       previewVisible: false,
@@ -48,7 +49,13 @@ export default {
   created() {
     this.fileList = []
     if (this.value) {
-      this.generateFileList(this.value)
+      if(this.parentComp === 'home') {
+        this.generateFileList(this.value)
+      } else if(this.parentComp === 'project') {
+        const fullPath = server_url + this.value;
+        this.generateFileList(fullPath)
+      }
+      
     }
   },
   destroyed() {
@@ -57,7 +64,9 @@ export default {
   watch: {
     value(val) {
       if (val) {
+        console.log('upload： ' + val)
         const fullpath = server_url + val
+        console.log('upload： '+fullpath)
         this.fileList = []
         this.generateFileList(fullpath)
       }
@@ -85,6 +94,7 @@ export default {
       this.previewVisible = true
     },
     handleChange({ file, fileList, event }) {
+      this.$forceUpdate()
       this.fileList = fileList
       if (file.response && file.response.code === 0) {
         this.handleSuccess(file.response)

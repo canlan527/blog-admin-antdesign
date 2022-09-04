@@ -67,10 +67,11 @@ export default {
       findOneBlog(this.id).then((res) => {
         this.form.title = res.title
         this.form.categoryId = res.category.id
-        console.log(this.form.categoryId)
+        // console.log(this.form.categoryId)
         this.form.description = res.description
         this.form.title = res.title
         this.form.thumb = res.thumb
+        console.log(this.form.thumb);
         this.$refs.toastuiEditor.invoke('setHTML', res.htmlContent)
       })
     }

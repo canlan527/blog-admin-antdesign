@@ -1,5 +1,5 @@
 <template>
-  <div class="add-project-container">
+  <div class="edit-project-container">
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <h3>项目名称</h3>
       <a-form-model-item>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { addProject } from '@/api/project'
+import { updateProject } from '@/api/project'
 import Upload from '@/components/Upload'
 
 const levelList = [1, 2, 3, 4, 5]
@@ -62,7 +62,7 @@ export default {
   methods: {
     handleSubmit() {
       this.form.description = this.form.desc.split(',')
-      addProject(this.form).then(res => {
+      updateProject(this.form).then(res => {
         this.$message.success('添加成功', 0.6);
         this.$router.push({
           name: 'project-list'

@@ -1,5 +1,12 @@
 <template>
-  <div class="add-project-container">
+  <a-modal
+    title="编辑项目信息"
+    :visible="visible"
+    :confirm-loading="confirmLoading"
+    @ok="() => $emit('ok')"
+    @cancel="() => $emit('cancel')"
+    width="70%"
+  >
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <h3>项目名称</h3>
       <a-form-model-item>
@@ -23,7 +30,7 @@
       </a-form-model-item>
       <h3>预览图</h3>
       <a-form-model-item>
-        <upload v-model="form.thumb"></upload>
+        <upload parentComp="project" v-model="form.thumb" v-if="visible"></upload>
       </a-form-model-item>
       <h3>排序</h3>
       <a-form-model-item>
@@ -31,45 +38,61 @@
           <a-select-option v-for="item of levelList" :key="item"> {{ item }} </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-button class="btn" type="primary" @click="handleSubmit">确认提交</a-button>
     </a-form-model>
-  </div>
+  </a-modal>
 </template>
 
 <script>
-import { addProject } from '@/api/project'
 import Upload from '@/components/Upload'
+import { server_url } from '@/server_url'
 
 const levelList = [1, 2, 3, 4, 5]
 export default {
   components: { Upload },
+  props: {
+    visible: {
+      type: Boolean,
+      default: () => false,
+    },
+    form: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
+      confirmLoading: false,
       levelList,
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
-      form: {
-        name: '',
-        desc: '',
-        description: [],
-        thumb: '',
-        github: '',
-        url: '',
-        order: 1,
-      },
     }
   },
-  methods: {
-    handleSubmit() {
-      this.form.description = this.form.desc.split(',')
-      addProject(this.form).then(res => {
-        this.$message.success('添加成功', 0.6);
-        this.$router.push({
-          name: 'project-list'
-        })
-      })
-    },
+  mounted() {
+    this.form.thumb = ''
   },
+  watch: {
+    'form.description': function (val) {
+      if (val) {
+        const temp = [...val]
+        let str = ''
+        temp.forEach((item) => {
+          str += item
+        })
+        this.form.desc = str
+      }
+    },
+    'form.thumb': {
+      handler (val) {
+        if(val) {
+          console.log('edit: '+ val);
+        }
+      },
+      deep: true
+    }
+      
+    
+  },
+  methods: {},
 }
 </script>
 

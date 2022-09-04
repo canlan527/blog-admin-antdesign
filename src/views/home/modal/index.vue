@@ -17,12 +17,12 @@
       <a-row>
         <a-col :span="10" push="2">
           <a-form-model-item label="中图" prop="midImg" :label-col="{ span: 6 }">
-            <upload v-model="form.midImg" v-if="visible"></upload>
+            <upload parentComp="home" v-model="form.midImg" v-if="visible"></upload>
           </a-form-model-item>
         </a-col>
         <a-col :span="10" push="2">
           <a-form-model-item label="大图" prop="bigImg" :label-col="{ span: 6 }">
-            <upload v-model="form.bigImg" v-if="visible"></upload>
+            <upload parentComp="home" v-model="form.bigImg" v-if="visible"></upload>
           </a-form-model-item>
         </a-col>
       </a-row>

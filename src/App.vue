@@ -26,3 +26,8 @@ export default {
   }
 }
 </script>
+<style lang="less">
+.ant-table-tbody {  
+  background: #fff;
+}
+</style>

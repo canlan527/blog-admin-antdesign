@@ -36,7 +36,7 @@ const constantRouterComponents = {
   // project
   ProjectList: () => import('@/views/project/list'),
   AddProject: () => import('@/views/project/add'),
-
+  EditProject: () => import('@/views/project/edit'),
   // message
   Message: () => import('@/views/message'),
 

@@ -646,7 +646,13 @@ export const userNav = (options) => {
       meta: { title: '添加项目' },
       component: 'AddProject'
     },
-
+    {
+      name: 'edit-project',
+      parentId: 12,
+      id: 1203,
+      meta: { title: '编辑项目' , show: false },
+      component: 'EditProject'
+    },
     // message
     {
       name: 'message',
