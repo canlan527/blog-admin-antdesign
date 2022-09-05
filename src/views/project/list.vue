@@ -94,12 +94,6 @@ export default {
     handelEdit(record) {
       this.edit = true;
       this.editForm = {...record};
-      // this.$router.push({
-      //   name: '',
-      //   params: {
-      //     id: record.id,
-      //   },
-      // })
     },
     handleDel(record) {
       const that = this

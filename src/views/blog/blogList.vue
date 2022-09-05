@@ -9,7 +9,9 @@
       :pagination="pagination"
       @change="handleChange"
     >
-      <span slot="indexRender" slot-scope="text, record, index">{{ index + 1 + (pagination.current - 1)  * pagination.defaultPageSize }}</span>
+      <span slot="indexRender" slot-scope="text, record, index">{{
+        index + 1 + (pagination.current - 1) * pagination.defaultPageSize
+      }}</span>
       <template slot="titleRender" slot-scope="text, record">
         <a-popover :title="text">
           <template slot="content">
@@ -20,8 +22,14 @@
       </template>
       <span slot="cateRender" slot-scope="text">{{ text !== null ? text.name : '未分类' }}</span>
       <span slot="dateRender" slot-scope="text">{{ formatDate(text) }}</span>
-      <span slot="btnRender" slot-scope="text, record" class="btn-action" >
-        <a-button class="cell-btn" type="primary" shape="circle" icon="edit" @click="() => handleEdit(record)"></a-button>
+      <span slot="btnRender" slot-scope="text, record" class="btn-action">
+        <a-button
+          class="cell-btn"
+          type="primary"
+          shape="circle"
+          icon="edit"
+          @click="() => handleEdit(record)"
+        ></a-button>
         <a-button type="danger" shape="circle" icon="delete" @click="() => handleDel(record)"></a-button>
       </span>
     </a-table>
@@ -98,7 +106,7 @@ export default {
         total: 1,
       },
       visible: false,
-      confirmLoading:false,
+      confirmLoading: false,
     }
   },
   created() {
@@ -121,33 +129,44 @@ export default {
 
         for (let i = 0; i < this.data.length; i++) {
           this.data[i].thumb_server_url = server_url + this.data[i].thumb
-
         }
       })
     },
     handleChange(pagination, filters, sorter, { currentDataSource }) {
       console.log(pagination, filters, sorter, currentDataSource)
-      this.pagination.current = pagination.current;
-      const page = pagination.current;
+      this.pagination.current = pagination.current
+      const page = pagination.current
       this.getBlogList(page)
     },
-    handleDel(record) {  
-      deleteOneBlog(record.id).then(res => {
-        this.getBlogList()
+    handleDel(record) {
+      const that = this
+      this.$confirm({
+        title: '确定要删除此项评论吗',
+        content: '删除后数据不可恢复',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {
+          deleteOneBlog(record.id).then((res) => {
+            that.$message.success('删除成功', 0.5)
+            that.getBlogList()
+          })
+        },
+        onCancel() {},
       })
     },
     handleOk() {
-      this.confirmLoading = true;
+      this.confirmLoading = true
     },
     handleCancel() {
-      this.visible = false;
+      this.visible = false
     },
     handleEdit(record) {
       this.$router.push({
         name: 'edit-blog',
-        params: {id: record.id},
+        params: { id: record.id },
       })
-    }
+    },
   },
 }
 </script>

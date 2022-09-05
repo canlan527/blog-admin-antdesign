@@ -40,3 +40,30 @@ export function findOneBlog(id) {
     method: 'get',
   })
 }
+
+export function getComment(page = 1, limit = 7, blogid = -1) {
+  return request({
+    url: '/comment',
+    method: 'get',
+    params: {
+      page,
+      limit,
+      blogid,
+    }
+  })
+}
+
+export function delComment(id) {
+  return request({
+    url: `/comment/${id}`,
+    method: 'delete'
+  })
+}
+
+export function addComment(data) {
+  return request({
+    url: '/comment',
+    method: 'post',
+    data
+  })
+}
