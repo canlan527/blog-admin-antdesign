@@ -11,6 +11,7 @@
         @preview="handlePreview"
         @change="handleChange"
         ref="uploadRef"
+        :disabled="disabled"
       >
         <div v-if="fileList.length < 1">
           <a-icon type="plus" />
@@ -35,7 +36,7 @@ function getBase64(file) {
   })
 }
 export default {
-  props: ['value','parentComp'],
+  props: ['value', 'parentComp','disabled'],
   data() {
     return {
       previewVisible: false,
@@ -48,14 +49,16 @@ export default {
   },
   created() {
     this.fileList = []
+    if(this.value.startsWith('http')) {
+      this.generateFileList(this.value)
+    }
     if (this.value) {
-      if(this.parentComp === 'home') {
+      if (this.parentComp === 'home') {
         this.generateFileList(this.value)
-      } else if(this.parentComp === 'project') {
-        const fullPath = server_url + this.value;
+      } else if (this.parentComp === 'project') {
+        const fullPath = server_url + this.value
         this.generateFileList(fullPath)
       }
-      
     }
   },
   destroyed() {
@@ -64,11 +67,13 @@ export default {
   watch: {
     value(val) {
       if (val) {
-        console.log('upload： ' + val)
-        const fullpath = server_url + val
-        console.log('upload： '+fullpath)
-        this.fileList = []
-        this.generateFileList(fullpath)
+        if (!val.startsWith('http')) {
+          const fullpath = server_url + val
+          this.fileList = []
+          this.generateFileList(fullpath)
+        } else {
+          this.generateFileList(val)
+        }
       }
     },
   },
