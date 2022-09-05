@@ -46,6 +46,13 @@ export function getInfo () {
     method: 'get'
   })
 }
+export function updateInfo(data) {
+  return request({
+    url: '/admin',
+    method: 'put',
+    data, 
+  })
+}
 export function getInfoAntDesign () {
   return request({
     url: userApi.UserInfo,

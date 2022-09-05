@@ -1,154 +1,158 @@
 <template>
   <div class="page-header-index-wide">
     <a-card :bordered="false" :bodyStyle="{ padding: '16px 0', height: '100%' }" :style="{ height: '100%' }">
-      <div class="account-settings-info-main" :class="{ 'mobile': isMobile }">
-        <div class="account-settings-info-left">
-          <a-menu
-            :mode="isMobile ? 'horizontal' : 'inline'"
-            :style="{ border: '0', width: isMobile ? '560px' : 'auto'}"
-            :selectedKeys="selectedKeys"
-            type="inner"
-            @openChange="onOpenChange"
-          >
-            <a-menu-item key="/account/settings/basic">
-              <router-link :to="{ name: 'BasicSettings' }">
-                {{ $t('account.settings.menuMap.basic') }}
-              </router-link>
-            </a-menu-item>
-            <a-menu-item key="/account/settings/security">
-              <router-link :to="{ name: 'SecuritySettings' }">
-                {{ $t('account.settings.menuMap.security') }}
-              </router-link>
-            </a-menu-item>
-            <a-menu-item key="/account/settings/custom">
-              <router-link :to="{ name: 'CustomSettings' }">
-                {{ $t('account.settings.menuMap.custom') }}
-              </router-link>
-            </a-menu-item>
-            <a-menu-item key="/account/settings/binding">
-              <router-link :to="{ name: 'BindingSettings' }">
-                {{ $t('account.settings.menuMap.binding') }}
-              </router-link>
-            </a-menu-item>
-            <a-menu-item key="/account/settings/notification">
-              <router-link :to="{ name: 'NotificationSettings' }">
-                {{ $t('account.settings.menuMap.notification') }}
-              </router-link>
-            </a-menu-item>
-          </a-menu>
-        </div>
-        <div class="account-settings-info-right">
-          <div class="account-settings-info-title">
-            <span>{{ $t($route.meta.title) }}</span>
-          </div>
-          <route-view></route-view>
-        </div>
+      <div class="account-settings-info-main">
+        <a-form-model ref="ruleForm" :rules="rules" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+          <a-form-model-item label="用户名">
+            <a-input v-model="form.name"></a-input>
+          </a-form-model-item>
+          <a-form-model-item has-feedback label="旧密码" prop="oldLoginPwd">
+            <a-input v-model="form.oldLoginPwd" type="password"></a-input>
+          </a-form-model-item>
+          <a-form-model-item has-feedback label="新密码" prop="loginPwd">
+            <a-input v-model="form.loginPwd" type="password"></a-input>
+          </a-form-model-item>
+          <a-form-model-item has-feedback label="确认密码" prop="loginPwdConfirm">
+            <a-input v-model="form.loginPwdConfirm" type="password"></a-input>
+          </a-form-model-item>
+          <a-form-model-item :wrapper-col="{ span: 4, offset: 2 }">
+            <a-button class="btn" type="primary" @click="onSubmit('ruleForm')"> 修改 </a-button>
+            <a-button style="margin-left: 10px" @click="resetForm"> 重置 </a-button>
+          </a-form-model-item>
+        </a-form-model>
+        <br />
       </div>
     </a-card>
   </div>
 </template>
 
 <script>
-import { RouteView } from '@/layouts'
+import { updateInfo, getInfo } from '@/api/login'
 import { baseMixin } from '@/store/app-mixin'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
-    RouteView
+    // RouteView
   },
   mixins: [baseMixin],
-  data () {
+  data() {
+    let validateOldPass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入旧密码'))
+      } else {
+        callback()
+      }
+    }
+
+    let validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入新密码'))
+      } else {
+        callback()
+      }
+    }
+    let validatePass2 = (rule, value, callback) => {
+      if (value !== this.form.loginPwd) {
+        callback(new Error('两次密码不匹配，请检查正确后重新输入!'))
+      } else {
+        callback()
+      }
+    }
+    const rules = {
+      username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+      oldLoginPwd: [
+        { required: true, message: '请输入旧密码', trigger: 'blur' },
+        { validator: validateOldPass, trigger: 'change' },
+      ],
+      loginPwd: [
+        { required: true, message: '请输入新密码', trigger: 'blur' },
+        { validator: validatePass, trigger: 'change' },
+      ],
+      loginPwdConfirm: [
+        { required: true, message: '请再次确认密码', trigger: 'blur' },
+        { validator: validatePass2, trigger: 'change' },
+      ],
+    }
+
     return {
-      // horizontal  inline
-      mode: 'inline',
-
-      openKeys: [],
-      selectedKeys: [],
-
-      // cropper
-      preview: {},
-      option: {
-        img: '/avatar2.jpg',
-        info: true,
-        size: 1,
-        outputType: 'jpeg',
-        canScale: false,
-        autoCrop: true,
-        // 只有自动截图开启 宽度高度才生效
-        autoCropWidth: 180,
-        autoCropHeight: 180,
-        fixedBox: true,
-        // 开启宽度和高度比例
-        fixed: true,
-        fixedNumber: [1, 1]
+      rules,
+      labelCol: { span: 2 },
+      wrapperCol: { span: 4 },
+      form: {
+        id: '',
+        loginId: '',
+        name: '',
+        oldLoginPwd: '',
+        loginPwd: '',
+        loginPwdConfirm: '',
       },
-
-      pageTitle: ''
     }
   },
-  mounted () {
-    this.updateMenu()
+  created() {
+    this.getInfo()
   },
   methods: {
-    onOpenChange (openKeys) {
-      this.openKeys = openKeys
+    ...mapActions(['Logout']),
+    getInfo() {
+      getInfo().then((res) => {
+        this.form = res
+      })
     },
-    updateMenu () {
-      const routes = this.$route.matched.concat()
-      this.selectedKeys = [ routes.pop().path ]
-    }
+    onSubmit() {
+      this.$refs.ruleForm.validate((valid, obj) => {
+        if (valid) {
+          if (this.form.name && this.form.loginPwd && this.form.oldLoginPwd) {
+            console.log(this.form)
+            updateInfo(this.form).then((res) => {
+              if(res.id) { // 代表了成功的返回
+                this.$message.success('设置成功', 0.5)
+                this.resetForm()
+                this.getInfo()
+                // 路由跳转到登录页面
+                this.Logout().then(res => {
+                  this.$router.push({
+                    path: `/login`
+                  })
+                })
+              }else {
+                this.$message.warn('密码错误，请重新输入')
+                this.resetForm()
+              }
+            })
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm() {
+      this.$refs.ruleForm.resetFields()
+      this.form = {
+        name: '',
+        oldLoginPwd: '',
+        loginPwd: '',
+        loginPwdConfirm: '',
+      }
+    },
   },
-  watch: {
-    '$route' (val) {
-      this.updateMenu()
-    }
-  }
 }
 </script>
 
 <style lang="less" scoped>
-  .account-settings-info-main {
-    width: 100%;
-    display: flex;
-    height: 100%;
-    overflow: auto;
-
-    &.mobile {
-      display: block;
-
-      .account-settings-info-left {
-        border-right: unset;
-        border-bottom: 1px solid #e8e8e8;
-        width: 100%;
-        height: 50px;
-        overflow-x: auto;
-        overflow-y: scroll;
-      }
-      .account-settings-info-right {
-        padding: 20px 40px;
-      }
-    }
-
-    .account-settings-info-left {
-      border-right: 1px solid #e8e8e8;
-      width: 224px;
-    }
-
-    .account-settings-info-right {
-      flex: 1 1;
-      padding: 8px 40px;
-
-      .account-settings-info-title {
-        color: rgba(0,0,0,.85);
-        font-size: 20px;
-        font-weight: 500;
-        line-height: 28px;
-        margin-bottom: 12px;
-      }
-      .account-settings-info-view {
-        padding-top: 12px;
-      }
+.account-settings-info-main {
+  width: 100%;
+  height: 100%;
+  .btn-box {
+    width: 200px;
+    margin-left: 170px;
+    .btn {
+      margin-right: 12px;
     }
   }
-
+  &.mobile {
+    display: block;
+  }
+}
 </style>
