@@ -133,7 +133,7 @@ export default {
       })
     },
     handleChange(pagination, filters, sorter, { currentDataSource }) {
-      console.log(pagination, filters, sorter, currentDataSource)
+      // console.log(pagination, filters, sorter, currentDataSource)
       this.pagination.current = pagination.current
       const page = pagination.current
       this.getBlogList(page)
