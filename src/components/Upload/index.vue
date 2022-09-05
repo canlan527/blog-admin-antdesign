@@ -49,34 +49,20 @@ export default {
   },
   created() {
     this.fileList = []
-    if(this.value.startsWith('http')) {
-      this.generateFileList(this.value)
-    }
-    if (this.value) {
-      if (this.parentComp === 'home') {
-        this.generateFileList(this.value)
-      } else if (this.parentComp === 'project') {
-        const fullPath = server_url + this.value
-        this.generateFileList(fullPath)
-      }
-    }
+    // if (this.value) {
+    //   this.generateFileList()
+    // }
   },
   destroyed() {
     this.fileList = []
   },
-  watch: {
-    value(val) {
-      if (val) {
-        if (!val.startsWith('http')) {
-          const fullpath = server_url + val
-          this.fileList = []
-          this.generateFileList(fullpath)
-        } else {
-          this.generateFileList(val)
-        }
-      }
-    },
-  },
+  // watch: {
+  //   value(val) {
+  //     if (val) {
+  //     //  this.generateFileList()
+  //     }
+  //   },
+  // },
   computed: {
     headers() {
       return {
@@ -84,7 +70,14 @@ export default {
       }
     },
     fullPath() {
-      return server_url + this.value
+      if(this.value) {
+        if(this.value.includes('http')){
+          return this.value
+        } else {
+          return server_url + this.value
+        }
+      }
+      
     },
   },
   methods: {
@@ -105,14 +98,16 @@ export default {
         this.handleSuccess(file.response)
       }
     },
-    generateFileList(url) {
+    generateFileList() {
       this.temp.uid = Math.random() * 100000
       this.temp.name = 'image.png'
       this.temp.status = 'done'
-      this.temp.url = url
-      this.fileList.push(this.temp)
+      this.temp.url = this.fullPath
+      console.log(this.fullPath);
+      this.fileList.push(temp)
     },
     handleSuccess(res) {
+      console.log(res.data);
       this.$emit('input', res.data)
     },
   },

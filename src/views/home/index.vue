@@ -41,13 +41,13 @@ const columns = [
   },
   {
     title: '中图预览',
-    dataIndex: 'midImg',
+    dataIndex: 'midImg2',
     className: 'img-td',
     scopedSlots: { customRender: 'imgRender' },
   },
   {
     title: '中图预览',
-    dataIndex: 'bigImg',
+    dataIndex: 'bigImg2',
     scopedSlots: { customRender: 'imgRender' },
   },
   {
@@ -83,8 +83,8 @@ export default {
     async fetchData() {
       this.bannerlist = await getBannerList()
       this.bannerlist.forEach((item) => {
-        item.midImg = server_url + item.midImg
-        item.bigImg = server_url + item.bigImg
+        item.midImg2 = server_url + item.midImg
+        item.bigImg2 = server_url + item.bigImg
       })
       console.log(this.bannerlist)
     },
