@@ -1,7 +1,6 @@
 <template>
   <div class="about-container">
     <h3>关于我： 设置超链</h3>
-
     <a-input v-model="value" style="width: 50%" :disabled="disabled"></a-input>
     <br>
     <br>
@@ -28,7 +27,7 @@ export default {
   methods: {
     getAbout() {
       getAbout().then(res => {
-        console.log(res);
+        // console.log(res);
         this.value = res;
       })
     },

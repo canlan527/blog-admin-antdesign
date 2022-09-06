@@ -46,7 +46,7 @@ const columns = [
     scopedSlots: { customRender: 'imgRender' },
   },
   {
-    title: '中图预览',
+    title: '大图预览',
     dataIndex: 'bigImg2',
     scopedSlots: { customRender: 'imgRender' },
   },
@@ -62,7 +62,12 @@ export default {
       columns,
       bannerlist: [],
       visible: false,
-      form: {},
+      form: {
+        title: '',
+        description: '',
+        bigImg: '',
+        midImg: ''
+      },
     }
   },
   computed: {
@@ -97,6 +102,7 @@ export default {
     },
     handleEdit(record, index) {
       this.form = { ...record }
+      console.log(this.form);
       this.$refs.modal.title = '请编辑信息'
       this.showModal()
     },

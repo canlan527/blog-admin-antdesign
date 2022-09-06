@@ -82,6 +82,14 @@ export default {
   created() {
     this.getSettings()
   },
+  watch: {
+    form: {
+      handler(val) {
+        // console.log(val);
+      },
+      deep: true,
+    }
+  },
   methods: {
     getSettings() {
       getSettings().then(res => {

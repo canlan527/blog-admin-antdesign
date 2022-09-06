@@ -36,7 +36,16 @@ function getBase64(file) {
   })
 }
 export default {
-  props: ['value', 'parentComp','disabled'],
+  props: {
+    value: {
+      type: String,
+      default: '',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       previewVisible: false,
@@ -47,22 +56,19 @@ export default {
       _imgUrl: '',
     }
   },
-  created() {
-    this.fileList = []
-    // if (this.value) {
-    //   this.generateFileList()
-    // }
-  },
   destroyed() {
     this.fileList = []
   },
-  // watch: {
-  //   value(val) {
-  //     if (val) {
-  //     //  this.generateFileList()
-  //     }
-  //   },
-  // },
+  watch: {
+    value: {
+      handler(val) {
+        if (val) {
+          this.generateFileList()
+        }
+      },
+      immediate: true,
+    },
+  },
   computed: {
     headers() {
       return {
@@ -70,14 +76,13 @@ export default {
       }
     },
     fullPath() {
-      if(this.value) {
-        if(this.value.includes('http')){
+      if (this.value) {
+        if (this.value.includes('http')) {
           return this.value
         } else {
           return server_url + this.value
         }
       }
-      
     },
   },
   methods: {
@@ -103,11 +108,10 @@ export default {
       this.temp.name = 'image.png'
       this.temp.status = 'done'
       this.temp.url = this.fullPath
-      console.log(this.fullPath);
-      this.fileList.push(temp)
+      this.fileList = [this.temp]    
     },
     handleSuccess(res) {
-      console.log(res.data);
+      console.log(res.data)
       this.$emit('input', res.data)
     },
   },

@@ -7,22 +7,22 @@
     @ok="handleOk"
     @cancel="() => $emit('cancel')"
   >
-    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+    <a-form-model ref="ruleForm" :model="selfForm" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="标题" prop="title">
-        <a-input v-model="form.title" placeholder="请输入标题" />
+        <a-input v-model="selfForm.title" placeholder="请输入标题" />
       </a-form-model-item>
       <a-form-model-item label="描述" prop="description">
-        <a-input v-model="form.description" placeholder="请描述信息" />
+        <a-input v-model="selfForm.description" placeholder="请描述信息" />
       </a-form-model-item>
       <a-row>
         <a-col :span="10" push="2">
           <a-form-model-item label="中图" prop="midImg" :label-col="{ span: 6 }">
-            <upload parentComp="home" v-model="form.midImg" v-if="visible"></upload>
+            <upload v-model="selfForm.midImg" ></upload>
           </a-form-model-item>
         </a-col>
         <a-col :span="10" push="2">
           <a-form-model-item label="大图" prop="bigImg" :label-col="{ span: 6 }">
-            <upload parentComp="home" v-model="form.bigImg" v-if="visible"></upload>
+            <upload v-model="selfForm.bigImg" v-if="visible"></upload>
           </a-form-model-item>
         </a-col>
       </a-row>
@@ -43,10 +43,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    // title: {
-    //   type: String,
-    //   default: ""
-    // }
   },
   data() {
     let validateMidImage = (rule, value, callback) => {
@@ -79,11 +75,21 @@ export default {
     return {
       rules,
       title: '',
+      selfForm: {},
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
       previewVisible: false,
       fileList: [],
       previewImage: '',
+    }
+  },
+  watch: {
+    form: {
+      handler (val) {
+        console.log(val)
+        this.selfForm = val;
+      },
+      deep: true
     }
   },
   components: {
